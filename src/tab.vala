@@ -5,7 +5,7 @@ public class TabbedWindow : Gtk.Window {
     {
       var page      = new Gtk.Image.from_stock (icon_name, Gtk.IconSize.DIALOG);
       var hbox      = new Gtk.HBox (false, 5);
-      var label     = new Gtk.Label (@"Icon $icon");
+      var label     = new Gtk.Label (@"Icon $icon_name");
       var close_but = new Gtk.Button ();
       var icon      = new Gtk.Image.from_stock (Gtk.Stock.CLOSE, Gtk.IconSize.MENU);
 
