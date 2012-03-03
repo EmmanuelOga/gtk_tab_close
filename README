@@ -1,0 +1,7 @@
+Example gtk app using vala on how to set close buttons for tabs.
+
+Adapted from a solution found on the
+[gtk forums](http://www.gtkforums.com/viewtopic.php?f=3&t=55305).
+
+Because vala has closures, there's no need to use GObject's properties
+(get/set).

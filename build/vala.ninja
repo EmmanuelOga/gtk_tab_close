@@ -1,0 +1,67 @@
+# Generated 2012-03-03 17:55:59 -0300
+
+# __     __    _         _   _ _        _       _
+# \ \   / /_ _| | __ _  | \ | (_)_ __  (_) __ _| |
+#  \ \ / / _` | |/ _` | |  \| | | '_ \ | |/ _` | |
+#   \ V / (_| | | (_| |_| |\  | | | | || | (_| |_|
+#    \_/ \__,_|_|\__,_(_)_| \_|_|_| |_|/ |\__,_(_)
+#                                    |__/
+
+
+# __     __          _
+# \ \   / /_ _ _ __ (_)___
+#  \ \ / / _` | '_ \| / __|
+#   \ V / (_| | |_) | \__ \
+#    \_/ \__,_| .__/|_|___/
+#             |_|
+
+rule fastvapi
+    description = gtkamlc fast vapi generation
+    restat = true
+    command = gtkamlc -g --implicitsdir /home/emmanuel/tmp/vala/build/gtkaml --pkg gtk+-3.0 --pkg gee-1.0 --fast-vapi=$out $in
+
+build _obj/src/tab.vapi: fastvapi src/tab.vala
+
+#         _____ _ _
+#   ___  |  ___(_) | ___  ___
+#  / __| | |_  | | |/ _ \/ __|
+# | (__  |  _| | | |  __/\__ \
+#(_)___| |_|   |_|_|\___||___/
+#
+
+rule vala_to_c
+    description = gtkamlc compilation to .c files
+    restat = true
+    command = gtkamlc -g --implicitsdir /home/emmanuel/tmp/vala/build/gtkaml --pkg gtk+-3.0 --pkg gee-1.0 -C $in -d _obj $vapis
+
+build _obj/src/tab.c: vala_to_c src/tab.vala | $
+                                _obj/src/tab.vapi
+    vapis = 
+
+
+#          _____ _ _
+#   ___   |  ___(_) | ___  ___
+#  / _ \  | |_  | | |/ _ \/ __|
+# | (_) | |  _| | | |  __/\__ \
+#(_)___/  |_|   |_|_|\___||___/
+#
+
+rule ccobj
+    description = cc binary object files
+    command = cc -g -MMD -MF $out.d -c -DGSEAL_ENABLE -pthread -I/usr/include/gtk-3.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng15   -pthread -I/usr/include/gee-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include   -pthread -lgtk-3 -lgdk-3 -latk-1.0 -lgio-2.0 -lpangoft2-1.0 -lpangocairo-1.0 -lgdk_pixbuf-2.0 -lcairo-gobject -lcairo -lpango-1.0 -lfreetype -lfontconfig -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0   -pthread -lgee -lgobject-2.0 -lgthread-2.0 -lrt -lglib-2.0   $in -o $out
+    depfile = $out.d
+
+build _obj/src/tab.o: ccobj _obj/src/tab.c
+
+#  _     _       _            _   ____  _
+# | |   (_)_ __ | | _____  __| | | __ )(_)_ __   __ _ _ __ _   _
+# | |   | | '_ \| |/ / _ \/ _` | |  _ \| | '_ \ / _` | '__| | | |
+# | |___| | | | |   <  __/ (_| | | |_) | | | | | (_| | |  | |_| |
+# |_____|_|_| |_|_|\_\___|\__,_| |____/|_|_| |_|\__,_|_|   \__, |
+#                                                          |___/
+
+rule ccbin
+    description = cc main binary executable
+    command = cc -g -DGSEAL_ENABLE -pthread -I/usr/include/gtk-3.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng15   -pthread -I/usr/include/gee-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include   -pthread -lgtk-3 -lgdk-3 -latk-1.0 -lgio-2.0 -lpangoft2-1.0 -lpangocairo-1.0 -lgdk_pixbuf-2.0 -lcairo-gobject -lcairo -lpango-1.0 -lfreetype -lfontconfig -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0   -pthread -lgee -lgobject-2.0 -lgthread-2.0 -lrt -lglib-2.0   $in -o $out
+
+build _obj/bamboo: ccbin _obj/src/tab.o | _obj/src/tab.o

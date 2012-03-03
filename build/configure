@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+def rel_path(path)
+  File.expand_path(File.join("..", path), __FILE__)
+end
+
+eval File.read(rel_path("ninja.rb"))
+
+conf = Ninja::Config.new do |c|
+  c.base_path = Dir.getwd
+  c.out_path = "_obj"
+  c.binary_name = "tabs"
+
+  c.src_glob = "src/**/*.{vala,gtkon}"
+
+  c.vala_package_names = %w[gtk+-3.0 gee-1.0]
+  c.valac_command = "gtkamlc"
+  c.valac_flags = ["-g", "--implicitsdir #{rel_path("gtkaml/")}"]
+
+  c.cc_flags = %w[-g] # %w[-O3 -g]
+end
+
+Ninja::Build.new(conf).configure!($stdout)
